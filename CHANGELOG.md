@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## v2.4.3.1 - 2018-12-06 Michael Mokroﬂ
+- Modified ShareFile.php to be compatible with PHP5.3
+
+
 ## v2.4.3 - 2018-04-07
 ### Fixed
 - Bug in binary reading function causing issues with DBF fields size

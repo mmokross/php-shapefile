@@ -2,7 +2,7 @@
 /***************************************************************************************************
 ShapeFile - PHP library to read any ESRI Shapefile and its associated DBF into a PHP Array, WKT or GeoJSON
     Author          : Gaspare Sganga
-    Version         : 2.4.3
+    Version         : 2.4.3.1
     License         : MIT
     Documentation   : https://gasparesganga.com/labs/php-shapefile/
 ****************************************************************************************************/
@@ -12,17 +12,17 @@ namespace ShapeFile;
 class ShapeFile implements \Iterator
 {
     // Constructor flags
-    const FLAG_SUPPRESS_Z           = 0b1;
-    const FLAG_SUPPRESS_M           = 0b10;
+    const FLAG_SUPPRESS_Z           = 1; // 0b1;
+    const FLAG_SUPPRESS_M           = 2; // 0b10;
     // getShapeType() return type
     const FORMAT_INT                = 0;
     const FORMAT_STR                = 1;
     // getRecord() Geometry format
-    const GEOMETRY_ARRAY            = 0b1;
-    const GEOMETRY_WKT              = 0b10;
-    const GEOMETRY_GEOJSON_GEOMETRY = 0b100;
-    const GEOMETRY_GEOJSON_FEATURE  = 0b1000;
-    const GEOMETRY_BOTH             = 0b11;     // DEPRECATED in v2.4.0!
+    const GEOMETRY_ARRAY            = 1; // 0b1;
+    const GEOMETRY_WKT              = 2; // 0b10;
+    const GEOMETRY_GEOJSON_GEOMETRY = 4; // 0b100;
+    const GEOMETRY_GEOJSON_FEATURE  = 8; // 0b1000;
+    const GEOMETRY_BOTH             = 3; // 0b11;     // DEPRECATED in v2.4.0!
     // End of file
     const EOF                       = 0;
     
@@ -944,9 +944,10 @@ class ShapeFile implements \Iterator
             case 3:
                 $flagM = (!$this->flags[self::FLAG_SUPPRESS_M] && $coord_type > 0) ? $this->checkPartsM($shp['parts']) : false;
                 if ($shp['numparts'] == 1) {
+                	$c = $this->implodeParts($shp['parts'], $flagZ, $flagM);
                     $ret = array(
                         'type'          => 'LineString' . ($flagM ? 'M' : ''),
-                        'coordinates'   => $this->implodeParts($shp['parts'], $flagZ, $flagM)[0]
+                        'coordinates'   => $c[0]
                     );
                 } else {
                     $ret = array(
